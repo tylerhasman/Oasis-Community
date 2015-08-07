@@ -3,6 +3,7 @@ package com.nirvana.oasis.community.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.ui.FriendListMenuBuilder;
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.commands.OasisCommand;
@@ -31,8 +32,8 @@ public class CommandFriend implements OasisCommand {
 		
 		pl.sendMessage(Chat.YELLOW+Chat.BOLD+"LOADING FRIENDS LIST...");
 		
-		Bukkit.getScheduler().runTaskAsynchronously(OasisCore.getInstance(), () -> {
-			PacketMenu menu = FriendListMenuBuilder.getFriendMenu(pl);
+		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+			PacketMenu menu = FriendListMenuBuilder.getFriendMenu(pl, null, null);
 			
 			menu.open(pl);
 		});

@@ -66,5 +66,9 @@ public class FriendListData implements Iterable<Friend>{
 	public Friend get(int i) {
 		return friends.get(i);
 	}
+
+	public void addFriend(Friend friend) {
+		friends.add(friend);
+	}
 	
 }

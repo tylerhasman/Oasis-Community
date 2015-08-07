@@ -26,5 +26,21 @@ public interface FriendManager {
 	 * @return true if the request was created
 	 */
 	public boolean addRequest(UUID sender, UUID reciever);
+
+	/**
+	 * Accept a friend request
+	 * @param sender the sender
+	 * @param receiver the receiver
+	 * @return true if accepting the request was successful
+	 */
+	public boolean acceptRequest(UUID sender, UUID receiver);
+
+	/**
+	 * Decline a friend request
+	 * @param sender thesender
+	 * @param receiver the receiver
+	 * @return true if declining the request was successful
+	 */
+	public boolean declineRequest(UUID sender, UUID receiver);
 	
 }

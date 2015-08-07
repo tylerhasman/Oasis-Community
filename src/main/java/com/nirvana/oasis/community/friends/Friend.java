@@ -10,14 +10,25 @@ public class Friend {
 	private String name;
 	private boolean isOnline;
 	private String server;
+	private long lastSeen;
 	
 	public Friend(UUID id) {
 		this.id = id;
 	}
 	
+	public Friend(UUID sender, String name2) {
+		id = sender;
+		name = name2;
+		
+	}
+
 	public void load(){
-		name = OasisCore.getDatabaseManager().getName(id);
+		if(name == null){
+			name = OasisCore.getDatabaseManager().getName(id);
+		}
+		
 		server = OasisCore.getJedisManager().getCurrentServer(id);
+		lastSeen = OasisCore.getJedisManager().getLastOnline(id);
 		
 		isOnline = server != null;
 	}
@@ -36,6 +47,10 @@ public class Friend {
 	
 	public boolean isOnline(){
 		return isOnline;
+	}
+	
+	public long getLastSeen() {
+		return lastSeen;
 	}
 	
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.inventory.Recipe;
+
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.database.ResultSetList;
 
@@ -58,6 +60,28 @@ public class BasicFriendManager implements FriendManager {
 			return false;
 		}
 		
+	}
+
+	@Override
+	public boolean acceptRequest(UUID sender, UUID receiver) {
+		try {
+			OasisCore.getDatabaseManager().execute("UPDATE `Friends` SET `Valid`=? WHERE `Player 1`=? AND `Player 2`=?", 1, receiver, sender);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean declineRequest(UUID sender, UUID receiver) {
+		try {
+			OasisCore.getDatabaseManager().execute("DELETE FROM `Friends` WHERE `Player 1`=? AND `Player 2`=?", receiver.toString(), sender.toString());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }
