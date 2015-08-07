@@ -37,7 +37,7 @@ public class FriendListMenuBuilder {
 	 */
 	public static PacketMenu getFriendMenu(Player pl, FriendListData data, RequestListData requests){
 		
-		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List");
+		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List", pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -56,7 +56,7 @@ public class FriendListMenuBuilder {
 		
 		menu.addItem(2, 1, getFriendOnlineItem(pl, data.getOnlineFriends().size()));
 		
-		menu.addItem(4, 1, getRequestItem(requests.size()), (ply, it, pm, ct, slot) ->{
+		menu.addItem(4, 1, getRequestItem(requests.getPendingRequests()), (ply, it, pm, ct, slot) ->{
 			getRequestMenu(ply, finalData, finalRequests).open(ply);
 		});
 		
@@ -109,7 +109,7 @@ public class FriendListMenuBuilder {
 	 * @return the packet menu
 	 */
 	public static PacketMenu getRequestMenu(Player pl, FriendListData data, RequestListData requests){
-		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List");
+		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List", pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -130,7 +130,7 @@ public class FriendListMenuBuilder {
 			getFriendMenu(ply, finalData, finalRequests).open(ply);
 		});
 		
-		menu.addItem(4, 1, getRequestItem(finalRequests.size()));
+		menu.addItem(4, 1, getRequestItem(finalRequests.getPendingRequests()));
 		
 		menu.addItem(6, 1, getAddFriendItem(), getHandlerForAddFriend(finalData));
 		
@@ -138,6 +138,11 @@ public class FriendListMenuBuilder {
 		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
 		.setLore("", Chat.GRAY+"Click to open.")
 		.build());
+		
+		menu.addItem(menu.getSize()-1, new Item(Material.MAGMA_CREAM)
+		.setTitle(ChatColor.YELLOW+"Refresh").build(), (ply, item, pm, ct, slot) -> {
+			getRequestMenu(ply, finalData, null).open(ply);
+		});
 		
 		for(Request request : finalRequests)
 		{
@@ -159,6 +164,8 @@ public class FriendListMenuBuilder {
 					friend.load();
 					finalData.addFriend(friend);
 					request.setFulfilled(true);
+					OasisCore.getNetworkUtilities().sendMessage(request.getName(), Chat.GOLD+"Your friend request to "+Chat.GREEN+ply.getName()+Chat.GOLD+" was accepted!");
+					getRequestMenu(ply, finalData, finalRequests).open(ply);;
 				}else if(ct.isRightClick()){
 					request.decline(ply.getUniqueId());
 					request.setFulfilled(true);
@@ -187,11 +194,15 @@ public class FriendListMenuBuilder {
 
 	private static PacketMenuSlotHandler getHandlerForAddFriend(final FriendListData finalData){
 		return (ply, it, pm, ct, slot) -> {
-			AnvilPacketMenu anvil = new AnvilPacketMenu();
+			AnvilPacketMenu anvil = new AnvilPacketMenu(ply);
 			
 			anvil.setResult(new ItemStack(Material.BOOK, 1));
 			anvil.setDefaultText("Enter name here");
 			anvil.setHandler((str, aply) -> {
+				
+				if(str == null){
+					getRequestMenu(aply, finalData, null).open(aply);
+				}
 				
 				UUID id = OasisCore.getDatabaseManager().getUUID(str);
 				

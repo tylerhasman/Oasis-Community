@@ -41,6 +41,10 @@ public class RequestListData implements Iterable<Request>{
 		return requests.iterator();
 	}
 	
+	public int getPendingRequests(){
+		return (int) requests.stream().filter(r -> !r.isFulfilled()).count();
+	}
+	
 	public int size(){
 		return requests.size();
 	}

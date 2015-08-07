@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.core.OasisCore;
+import com.nirvana.oasis.core.exception.OasisRuntimeException;
 
 public class Request {
 
@@ -47,7 +48,11 @@ public class Request {
 	
 	public void accept(UUID receiver) {
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
-			OasisCommunity.getFriendManager().acceptRequest(sender, receiver);
+			boolean b = OasisCommunity.getFriendManager().acceptRequest(sender, receiver);
+			
+			if(!b){
+				throw new OasisRuntimeException("Failed to accept request");
+			}
 		});
 		
 	}
