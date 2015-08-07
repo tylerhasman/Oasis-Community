@@ -27,10 +27,4 @@ public interface FriendManager {
 	 */
 	public boolean addRequest(UUID sender, UUID reciever);
 	
-	/**
-	 * Load a player from the database
-	 * @param id the players id
-	 */
-	public void loadPlayer(UUID id);
-	
 }

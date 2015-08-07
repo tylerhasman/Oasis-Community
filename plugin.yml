@@ -1,0 +1,5 @@
+name: Oasis-Community
+version: 0.0.1
+main: com.nirvana.oasis.community.OasisCommunity
+description: Friends, Parties and other community related functions
+depend: [Oasis-Core]
