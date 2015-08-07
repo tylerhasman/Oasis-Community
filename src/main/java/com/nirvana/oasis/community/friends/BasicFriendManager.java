@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.inventory.Recipe;
-
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.database.ResultSetList;
 
@@ -82,6 +80,15 @@ public class BasicFriendManager implements FriendManager {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public void deleteFriend(UUID friend, UUID deleter) {
+		try {
+			OasisCore.getDatabaseManager().execute("DELETE FROM `Friends` WHERE `Player 1`=? AND `Player 2`=?", deleter.toString(), friend.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

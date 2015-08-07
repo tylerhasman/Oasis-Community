@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.ui.FriendListMenuBuilder;
-import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.commands.OasisCommand;
 import com.nirvana.oasis.core.menu.PacketMenu;
 import com.nirvana.oasis.mc.Chat;

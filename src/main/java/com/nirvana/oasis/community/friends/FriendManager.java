@@ -42,5 +42,12 @@ public interface FriendManager {
 	 * @return true if declining the request was successful
 	 */
 	public boolean declineRequest(UUID sender, UUID receiver);
+
+	/**
+	 * Delete a friend from a friends list
+	 * @param friend the friend
+	 * @param deleter the person who wants the friend deleted ;(
+	 */
+	public void deleteFriend(UUID friend, UUID deleter);
 	
 }

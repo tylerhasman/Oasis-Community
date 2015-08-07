@@ -70,5 +70,19 @@ public class FriendListData implements Iterable<Friend>{
 	public void addFriend(Friend friend) {
 		friends.add(friend);
 	}
+
+	public boolean isFriend(UUID id) {
+		for(Friend friend : friends)
+		{
+			if(friend.getId().equals(id)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void deleteFriend(Friend friend) {
+		friends.remove(friend);
+	}
 	
 }

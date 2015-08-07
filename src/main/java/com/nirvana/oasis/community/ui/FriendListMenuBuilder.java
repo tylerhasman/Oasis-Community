@@ -1,7 +1,5 @@
 package com.nirvana.oasis.community.ui;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import net.md_5.bungee.api.ChatColor;
@@ -9,7 +7,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import com.nirvana.oasis.community.OasisCommunity;
@@ -27,6 +24,9 @@ import com.nirvana.oasis.mc.Item;
 
 public class FriendListMenuBuilder {
 	
+	private static final int SIZE = 54;
+	private static final String TITLE = Chat.BLUE+Chat.BOLD+"Friend List";
+	
 	/**
 	 * Open a friends menu. To save time we cache the friend list and request list between menus opening.
 	 * This means a player will have to completely close the friends list to request an update from the database
@@ -37,7 +37,7 @@ public class FriendListMenuBuilder {
 	 */
 	public static PacketMenu getFriendMenu(Player pl, FriendListData data, RequestListData requests){
 		
-		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List", pl);
+		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -65,7 +65,9 @@ public class FriendListMenuBuilder {
 		menu.addItem(8, 1, new Item(Material.BARRIER)
 		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
 		.setLore("", Chat.GRAY+"Click to open.")
-		.build());
+		.build(), (ply, it, pm, ct, slot) ->{
+			getDeletionMenu(ply, finalData, finalRequests).open(ply);
+		});
 		
 		
 		for(Friend friend : data.getOnlineFriends()){
@@ -109,7 +111,7 @@ public class FriendListMenuBuilder {
 	 * @return the packet menu
 	 */
 	public static PacketMenu getRequestMenu(Player pl, FriendListData data, RequestListData requests){
-		PacketMenu menu = new BasicPacketMenu(9 * 6, Chat.GREEN+"Friend List", pl);
+		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -137,7 +139,9 @@ public class FriendListMenuBuilder {
 		menu.addItem(8, 1, new Item(Material.BARRIER)
 		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
 		.setLore("", Chat.GRAY+"Click to open.")
-		.build());
+		.build(), (ply, it, pm, ct, slot) ->{
+			getDeletionMenu(ply, finalData, finalRequests).open(ply);
+		});
 		
 		menu.addItem(menu.getSize()-1, new Item(Material.MAGMA_CREAM)
 		.setTitle(ChatColor.YELLOW+"Refresh").build(), (ply, item, pm, ct, slot) -> {
@@ -185,6 +189,62 @@ public class FriendListMenuBuilder {
 		
 	}
 	
+	public static PacketMenu getDeletionMenu(Player pl, FriendListData data, RequestListData requests){
+		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
+		
+		if(data == null){
+			data = new FriendListData(pl);
+			data.load();
+		}
+	
+		if(requests == null){
+			requests = new RequestListData(pl);
+			requests.load();
+		}
+		
+		final FriendListData finalData = data;
+		final RequestListData finalRequests = requests;
+		
+		int x = 1, y = 3;
+		
+		menu.addItem(2, 1, getFriendOnlineItem(pl, data.getOnlineFriends().size()), (ply, it, pm, ct, slot) ->{
+			getFriendMenu(ply, finalData, finalRequests).open(ply);
+		});
+		
+		menu.addItem(4, 1, getRequestItem(requests.getPendingRequests()), (ply, it, pm, ct, slot) ->{
+			getRequestMenu(ply, finalData, finalRequests).open(ply);
+		});
+		
+		menu.addItem(6, 1, getAddFriendItem(), getHandlerForAddFriend(finalData));
+		
+		menu.addItem(8, 1, new Item(Material.BARRIER)
+		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
+		.setLore("", Chat.GRAY+"Click to open.")
+		.build());
+		
+		
+		for(Friend friend : finalData){
+			ItemStack item = new Item(Material.SKULL_ITEM).setOwner(friend.getName())
+					.setLore("", Chat.RED+Chat.UNDERLINE+"Click to remove").build();
+			
+			menu.addItem(x, y, item, (ply, it, pm, ct, slot) -> {
+				Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+					OasisCommunity.getFriendManager().deleteFriend(friend.getId(), ply.getUniqueId());
+				});
+				finalData.deleteFriend(friend);
+				pm.addItem(slot, null);
+			});
+			
+			x++;
+			if(x > 9){
+				x = 1;
+				y++;
+			}
+		}
+		
+		return menu;
+	}
+	
 	private static ItemStack getAddFriendItem() {
 		return new Item(Material.BOOK_AND_QUILL)
 		.setTitle(Chat.GREEN+Chat.BOLD+"Add Friend")
@@ -209,11 +269,18 @@ public class FriendListMenuBuilder {
 				if(id == null){
 					aply.sendMessage(Chat.RED+"No player named "+str+" could be found!");
 				}else{
-					aply.sendMessage(Chat.GREEN+Chat.BOLD+"Sending friend request....");
-					Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
-						OasisCommunity.getFriendManager().addRequest(aply.getUniqueId(), id);
-						getRequestMenu(aply, finalData, null).open(aply);
-					});
+					
+					if(finalData.isFriend(id)){
+						aply.sendMessage(Chat.RED+"They are already your friend!");
+					}else{
+						
+						aply.sendMessage(Chat.GREEN+Chat.BOLD+"Sending friend request....");
+						Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+							OasisCommunity.getFriendManager().addRequest(aply.getUniqueId(), id);
+							getRequestMenu(aply, finalData, null).open(aply);
+						});
+					}
+
 					
 				}
 				
