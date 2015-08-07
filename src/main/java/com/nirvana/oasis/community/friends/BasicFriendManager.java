@@ -52,7 +52,7 @@ public class BasicFriendManager implements FriendManager {
 	public boolean addRequest(UUID sender, UUID reciever) {
 		
 		try {
-			int result = OasisCore.getDatabaseManager().execute("INSERT INTO `Friends` (`Player 1`, `Player 2`) VALUES (?, ?)", sender.toString(), reciever.toString());
+			int result = OasisCore.getDatabaseManager().execute("INSERT INTO `Friends` (`Player 1`, `Player 2`) VALUES (?, ?)", reciever.toString(), sender.toString());
 
 			return result > 0;//If we didnt change a line that must mean something happened incorrectly!
 		} catch (Exception e) {
@@ -66,6 +66,7 @@ public class BasicFriendManager implements FriendManager {
 	public boolean acceptRequest(UUID sender, UUID receiver) {
 		try {
 			OasisCore.getDatabaseManager().execute("UPDATE `Friends` SET `Valid`=? WHERE `Player 1`=? AND `Player 2`=?", 1, receiver, sender);
+			OasisCore.getDatabaseManager().execute("UPDATE `Friends` SET `Valid`=? WHERE `Player 2`=? AND `Player 1`=?", 1, receiver, sender);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,14 +2,17 @@ package com.nirvana.oasis.community.ui;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.friends.Friend;
 import com.nirvana.oasis.community.friends.FriendListData;
 import com.nirvana.oasis.community.friends.Request;
@@ -18,6 +21,7 @@ import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.menu.AnvilPacketMenu;
 import com.nirvana.oasis.core.menu.BasicPacketMenu;
 import com.nirvana.oasis.core.menu.PacketMenu;
+import com.nirvana.oasis.core.menu.PacketMenuSlotHandler;
 import com.nirvana.oasis.mc.Chat;
 import com.nirvana.oasis.mc.Item;
 
@@ -56,19 +60,7 @@ public class FriendListMenuBuilder {
 			getRequestMenu(ply, finalData, finalRequests).open(ply);
 		});
 		
-		menu.addItem(6, 1, getAddFriendItem(), 
-				(ply, it, pm, ct, slot) -> {
-					AnvilPacketMenu anvil = new AnvilPacketMenu();
-					
-					anvil.setResult(new ItemStack(Material.BOOK, 1));
-					anvil.setDefaultText("Enter name here");
-					anvil.setHandler((str, aply) -> {
-						aply.sendMessage(str);
-					});
-					
-					pm.close(ply);
-					anvil.open(ply);
-				});
+		menu.addItem(6, 1, getAddFriendItem(), getHandlerForAddFriend(finalData));
 		
 		menu.addItem(8, 1, new Item(Material.BARRIER)
 		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
@@ -140,18 +132,7 @@ public class FriendListMenuBuilder {
 		
 		menu.addItem(4, 1, getRequestItem(finalRequests.size()));
 		
-		menu.addItem(6, 1, getAddFriendItem(), 
-				(ply, it, pm, ct, slot) -> {
-					AnvilPacketMenu anvil = new AnvilPacketMenu();
-					
-					anvil.setResult(new ItemStack(Material.BOOK, 1));
-					anvil.setDefaultText("Enter name here");
-					anvil.setHandler((str, aply) -> {
-						aply.sendMessage(str);
-					});
-					
-					anvil.open(ply);
-				});
+		menu.addItem(6, 1, getAddFriendItem(), getHandlerForAddFriend(finalData));
 		
 		menu.addItem(8, 1, new Item(Material.BARRIER)
 		.setTitle(Chat.GREEN+Chat.BOLD+"Remove Friends")
@@ -204,6 +185,34 @@ public class FriendListMenuBuilder {
 		.build();
 	}
 
+	private static PacketMenuSlotHandler getHandlerForAddFriend(final FriendListData finalData){
+		return (ply, it, pm, ct, slot) -> {
+			AnvilPacketMenu anvil = new AnvilPacketMenu();
+			
+			anvil.setResult(new ItemStack(Material.BOOK, 1));
+			anvil.setDefaultText("Enter name here");
+			anvil.setHandler((str, aply) -> {
+				
+				UUID id = OasisCore.getDatabaseManager().getUUID(str);
+				
+				if(id == null){
+					aply.sendMessage(Chat.RED+"No player named "+str+" could be found!");
+				}else{
+					aply.sendMessage(Chat.GREEN+Chat.BOLD+"Sending friend request....");
+					Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+						OasisCommunity.getFriendManager().addRequest(aply.getUniqueId(), id);
+						getRequestMenu(aply, finalData, null).open(aply);
+					});
+					
+				}
+				
+			});
+			
+			pm.close(ply);
+			anvil.open(ply);
+		};
+	}
+	
 	private static ItemStack getFriendOnlineItem(Player pl, int online) {
 		return new Item(Material.SKULL_ITEM)
 		.setOwner(pl.getName())
