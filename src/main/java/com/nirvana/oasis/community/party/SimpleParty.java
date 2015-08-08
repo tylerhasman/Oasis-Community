@@ -103,6 +103,14 @@ public class SimpleParty implements Party {
 
 	@Override
 	public void disband() {
+		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+			try {
+				OasisCore.getDatabaseManager().execute("DELETE FROM `Party` WHERE `Leader`=?", leader);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
 		OasisCommunity.getPartyManager().removeParty(this);
 		sendPartyMessage(Chat.RED+"The party has disbanded!");
 		members.clear();
