@@ -82,7 +82,7 @@ public class SimpleParty implements Party {
 	public void insertIntoDatabase(){
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
 			try {
-				OasisCore.getDatabaseManager().execute("INSERT INTO `Party` (`Leader`, `Members`)", leader.toString(), getMemberString());
+				OasisCore.getDatabaseManager().execute("INSERT INTO `Party` (`Leader`, `Members`) VALUES (?, ?)", leader.toString(), getMemberString());
 			} catch (Exception e) {
 				e.printStackTrace();
 				sendPartyMessage(Chat.DARK_RED+"An internal error occured when attempting to create the party!");
