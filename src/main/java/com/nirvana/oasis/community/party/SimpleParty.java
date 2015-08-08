@@ -24,9 +24,11 @@ public class SimpleParty implements Party {
 	
 	private List<String> members;
 	private String leader;
+	private List<String> invites;
 	
 	public SimpleParty(Player leader, String... others) {
 		members = new ArrayList<String>(Constants.MAX_PARTY_SIZE);
+		invites = new ArrayList<String>();
 		
 		addPlayer(leader.getName());
 		
@@ -101,7 +103,10 @@ public class SimpleParty implements Party {
 
 	@Override
 	public void disband() {
-		
+		OasisCommunity.getPartyManager().removeParty(this);
+		sendPartyMessage(Chat.RED+"The party has disbanded!");
+		members.clear();
+		leader = "";
 	}
 
 	@Override
@@ -114,6 +119,21 @@ public class SimpleParty implements Party {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void addInvite(String player) {
+		invites.add(player);
+	}
+
+	@Override
+	public boolean isInvited(String player) {
+		return invites.contains(player);
+	}
+
+	@Override
+	public void removePlayer(String name) {
+		members.remove(name);
 	}
 
 }

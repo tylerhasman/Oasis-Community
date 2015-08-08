@@ -3,6 +3,7 @@ package com.nirvana.oasis.community;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nirvana.oasis.community.commands.CommandFriend;
+import com.nirvana.oasis.community.commands.CommandParty;
 import com.nirvana.oasis.community.friends.BasicFriendManager;
 import com.nirvana.oasis.community.friends.FriendManager;
 import com.nirvana.oasis.community.party.BasicPartyManager;
@@ -20,6 +21,7 @@ public class OasisCommunity extends JavaPlugin {
 		partyManager = new BasicPartyManager();
 		
 		OasisCore.getCommandManager().registerCommand(new CommandFriend());
+		OasisCore.getCommandManager().registerCommand(new CommandParty());
 	}
 	
 	public static OasisCommunity getInstance(){

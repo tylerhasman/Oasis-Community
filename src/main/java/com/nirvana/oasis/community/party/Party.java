@@ -60,4 +60,23 @@ public interface Party {
 	 */
 	public boolean isPlayerInParty(String player);
 	
+	/**
+	 * Invite a player to the party
+	 * @param player the invited person
+	 */
+	public void addInvite(String player);
+	
+	/**
+	 * 
+	 * @param player the player name
+	 * @return true if they have been invited to the party
+	 */
+	public boolean isInvited(String player);
+
+	/**
+	 * Remove a player from the party
+	 * @param name the player
+	 */
+	public void removePlayer(String name);
+	
 }

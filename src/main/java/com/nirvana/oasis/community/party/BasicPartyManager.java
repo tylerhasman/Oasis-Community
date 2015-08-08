@@ -2,7 +2,6 @@ package com.nirvana.oasis.community.party;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
