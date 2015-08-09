@@ -16,7 +16,7 @@ import com.nirvana.oasis.community.friends.Request;
 import com.nirvana.oasis.community.friends.RequestListData;
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.menu.AnvilPacketMenu;
-import com.nirvana.oasis.core.menu.BasicPacketMenu;
+import com.nirvana.oasis.core.menu.ChestPacketMenu;
 import com.nirvana.oasis.core.menu.PacketMenu;
 import com.nirvana.oasis.core.menu.PacketMenuSlotHandler;
 import com.nirvana.oasis.mc.Chat;
@@ -37,7 +37,7 @@ public class FriendListMenuBuilder {
 	 */
 	public static PacketMenu getFriendMenu(Player pl, FriendListData data, RequestListData requests){
 		
-		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
+		PacketMenu menu = new ChestPacketMenu(SIZE, TITLE, pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -111,7 +111,7 @@ public class FriendListMenuBuilder {
 	 * @return the packet menu
 	 */
 	public static PacketMenu getRequestMenu(Player pl, FriendListData data, RequestListData requests){
-		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
+		PacketMenu menu = new ChestPacketMenu(SIZE, TITLE, pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
@@ -190,7 +190,7 @@ public class FriendListMenuBuilder {
 	}
 	
 	public static PacketMenu getDeletionMenu(Player pl, FriendListData data, RequestListData requests){
-		PacketMenu menu = new BasicPacketMenu(SIZE, TITLE, pl);
+		PacketMenu menu = new ChestPacketMenu(SIZE, TITLE, pl);
 		
 		if(data == null){
 			data = new FriendListData(pl);
