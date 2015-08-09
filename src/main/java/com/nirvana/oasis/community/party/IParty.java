@@ -69,11 +69,16 @@ public class IParty implements Party {
 	@Override
 	public void addPlayer(String name) {
 		members.add(name);
+		updatePartyMembers();
+	}
+	
+	public void updatePartyMembers(){
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
 			try {
 				OasisCore.getDatabaseManager().execute("UPDATE `Party` SET `Members`=? WHERE `Leader`=?", getMemberString(), getLeader());
 			} catch (Exception e) {
 				e.printStackTrace();
+				sendPartyMessage(Chat.RED+"Something went wrong when updating party members! Please tell a staff member!");
 			}
 		});
 	}
@@ -146,6 +151,7 @@ public class IParty implements Party {
 	@Override
 	public void removePlayer(String name) {
 		members.remove(name);
+		updatePartyMembers();
 	}
 
 	@Override
