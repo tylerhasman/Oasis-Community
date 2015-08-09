@@ -36,7 +36,7 @@ public class BasicPartyManager implements PartyManager {
 			
 			String[] splits = otherString.split("/");
 			
-			Party party = new SimpleParty(leader, splits);
+			Party party = new SimpleParty(leader.getName(), splits);
 			
 			addParty(party);
 			

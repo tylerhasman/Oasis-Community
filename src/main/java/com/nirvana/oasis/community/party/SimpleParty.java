@@ -26,11 +26,11 @@ public class SimpleParty implements Party {
 	private String leader;
 	private List<String> invites;
 	
-	public SimpleParty(Player leader, String... others) {
+	public SimpleParty(String leader, String... others) {
 		members = new ArrayList<String>(Constants.MAX_PARTY_SIZE);
 		invites = new ArrayList<String>();
 		
-		addPlayer(leader.getName());
+		addPlayer(leader);
 		
 		for(String other : others){
 			addPlayer(other);
@@ -69,6 +69,7 @@ public class SimpleParty implements Party {
 	public void sendPartyMessage(String message) {
 		members.stream().forEach(member -> OasisCore.getNetworkUtilities().sendMessage(member, message));
 	}
+	
 	@Override
 	public void addPlayer(String name) {
 		members.add(name);

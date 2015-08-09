@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.ui.FriendListMenuBuilder;
+import com.nirvana.oasis.core.commands.CommandResult;
 import com.nirvana.oasis.core.commands.OasisCommand;
 import com.nirvana.oasis.core.menu.PacketMenu;
 import com.nirvana.oasis.mc.Chat;
@@ -27,7 +28,7 @@ public class CommandFriend implements OasisCommand {
 	}
 
 	@Override
-	public boolean execute(Player pl, String[] args) {		
+	public CommandResult execute(Player pl, String[] args) {		
 		
 		pl.sendMessage(Chat.YELLOW+Chat.BOLD+"LOADING FRIENDS LIST...");
 		
@@ -37,9 +38,7 @@ public class CommandFriend implements OasisCommand {
 			menu.open(pl);
 		});
 		
-		
-		
-		return true;
+		return CommandResult.SUCCESS;
 	}
 
 	@Override

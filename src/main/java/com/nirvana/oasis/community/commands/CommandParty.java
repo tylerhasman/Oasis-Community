@@ -1,11 +1,13 @@
 package com.nirvana.oasis.community.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.party.Party;
 import com.nirvana.oasis.community.party.SimpleParty;
 import com.nirvana.oasis.core.OasisCore;
+import com.nirvana.oasis.core.commands.CommandResult;
 import com.nirvana.oasis.core.commands.OasisCommand;
 import com.nirvana.oasis.mc.Chat;
 
@@ -27,10 +29,10 @@ public class CommandParty implements OasisCommand {
 	}
 
 	@Override
-	public boolean execute(Player pl, String[] args) {
+	public CommandResult execute(Player pl, String[] args) {
 		if(args.length == 0)
 		{
-			return false;
+			return CommandResult.BAD_USAGE;
 		}
 		
 		String cmd = args[0];
@@ -40,7 +42,7 @@ public class CommandParty implements OasisCommand {
 				pl.sendMessage(Chat.RED+"You are already in a party!");
 			}else{
 				
-				SimpleParty party = new SimpleParty(pl);
+				SimpleParty party = new SimpleParty(pl.getName());
 				
 				party.insertIntoDatabase();
 				
@@ -51,7 +53,7 @@ public class CommandParty implements OasisCommand {
 		}else if(cmd.equalsIgnoreCase("join")){
 			
 			if(args.length < 2){
-				return false;
+				return CommandResult.BAD_USAGE;
 			}
 			
 			String target = args[1];
@@ -76,10 +78,17 @@ public class CommandParty implements OasisCommand {
 			
 		}else if(cmd.equalsIgnoreCase("invite")){
 			if(args.length < 2){
-				return false;
+				return CommandResult.BAD_USAGE;
 			}
 			
 			String target = args[1];
+			
+			Player invited = Bukkit.getPlayer(target);
+			
+			if(invited == null){
+				OasisCore.getLocaleManager().sendPlayerNotFound(pl, target);
+				return CommandResult.SUCCESS;
+			}
 			
 			Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
 			
@@ -163,10 +172,23 @@ public class CommandParty implements OasisCommand {
 				pl.sendMessage(Chat.RED+"You're not in a party!");
 			}
 		}else{
-			return false;
+			
+			String[] messages = new String[]{
+				"/party create - Create a new party",
+				"/party join [name] - Join someones party",
+				"/party invite [name] - Invite someone to your party",
+				"/party disband - Destroy the your party",
+				"/party leave - Leave your party, if your the leader this disbands it",
+				"/party list - List all members in your party",
+				"/party warp - Warp all members of the party to your server"
+			};
+			
+			pl.sendMessage(messages);
+			
+			return CommandResult.SUCCESS;
 		}
 		
-		return true;
+		return CommandResult.SUCCESS;
 	}
 
 	@Override
