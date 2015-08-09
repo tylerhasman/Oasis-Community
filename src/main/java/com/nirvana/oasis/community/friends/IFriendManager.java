@@ -7,7 +7,7 @@ import java.util.UUID;
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.database.ResultSetList;
 
-public class BasicFriendManager implements FriendManager {
+public class IFriendManager implements FriendManager {
 	
 	public List<UUID> getFriends(UUID id) {
 		

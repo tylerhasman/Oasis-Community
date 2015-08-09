@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.party.Party;
-import com.nirvana.oasis.community.party.SimpleParty;
+import com.nirvana.oasis.community.party.IParty;
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.commands.CommandResult;
 import com.nirvana.oasis.core.commands.OasisCommand;
@@ -42,7 +42,7 @@ public class CommandParty implements OasisCommand {
 				pl.sendMessage(Chat.RED+"You are already in a party!");
 			}else{
 				
-				SimpleParty party = new SimpleParty(pl.getName());
+				IParty party = new IParty(pl.getName());
 				
 				party.insertIntoDatabase();
 				
@@ -94,7 +94,7 @@ public class CommandParty implements OasisCommand {
 			
 			if(party == null){
 				pl.sendMessage(Chat.RED+"You're not in a party!");
-			}else if(!party.getLeader().equals(pl.getName())){
+			}else if(!party.isLeader(pl.getName())){
 				pl.sendMessage(Chat.RED+"You're not the leader of your party!");
 			}else if(party.isInvited(target)){
 				pl.sendMessage(Chat.RED+target+" is already invited to your party!");
@@ -111,7 +111,7 @@ public class CommandParty implements OasisCommand {
 			Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
 			
 			if(party != null){
-				if(party.getLeader().equals(pl.getName())){
+				if(party.isLeader(pl.getName())){
 					party.disband();
 				}else{
 					pl.sendMessage(Chat.RED+"Only the party leader may disband the party!");
@@ -123,7 +123,7 @@ public class CommandParty implements OasisCommand {
 			Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
 			
 			if(party != null){
-				if(party.getLeader().equals(pl.getName())){
+				if(party.isLeader(pl.getName())){
 					party.disband();
 				}else{
 					party.removePlayer(pl.getName());
@@ -146,7 +146,7 @@ public class CommandParty implements OasisCommand {
 				}
 				
 				for(String member : party.getMembers()){
-					if(party.getLeader().equals(member)){
+					if(party.isLeader(member)){
 						continue;
 					}
 					
@@ -160,7 +160,7 @@ public class CommandParty implements OasisCommand {
 			Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
 			
 			if(party != null){
-				if(party.getLeader().equals(pl.getName())){
+				if(party.isLeader(pl.getName())){
 					
 					party.sendPartyMessage(Chat.GREEN+"The party has been warped to "+Chat.GOLD+OasisCore.getNetworkUtilities().getBungeeId());
 					party.connectParty(OasisCore.getNetworkUtilities().getBungeeId());

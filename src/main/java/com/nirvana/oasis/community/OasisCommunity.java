@@ -6,9 +6,9 @@ import com.nirvana.oasis.community.commands.CommandFriend;
 import com.nirvana.oasis.community.commands.CommandParty;
 import com.nirvana.oasis.community.commands.CommandReply;
 import com.nirvana.oasis.community.commands.CommandWhisper;
-import com.nirvana.oasis.community.friends.BasicFriendManager;
+import com.nirvana.oasis.community.friends.IFriendManager;
 import com.nirvana.oasis.community.friends.FriendManager;
-import com.nirvana.oasis.community.party.BasicPartyManager;
+import com.nirvana.oasis.community.party.IPartyManager;
 import com.nirvana.oasis.community.party.PartyManager;
 import com.nirvana.oasis.community.whisper.IWhisperManager;
 import com.nirvana.oasis.community.whisper.WhisperManager;
@@ -22,8 +22,8 @@ public class OasisCommunity extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		friendManager = new BasicFriendManager();
-		partyManager = new BasicPartyManager();
+		friendManager = new IFriendManager();
+		partyManager = new IPartyManager();
 		whisperManager = new IWhisperManager();
 		
 		OasisCore.getCommandManager().registerCommand(new CommandFriend());

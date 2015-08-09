@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.database.ResultSetList;
 
-public class BasicPartyManager implements PartyManager {
+public class IPartyManager implements PartyManager {
 
 	private List<Party> parties;
 	
-	public BasicPartyManager() {
+	public IPartyManager() {
 		parties = new ArrayList<Party>();
 	}
 	
@@ -36,7 +36,7 @@ public class BasicPartyManager implements PartyManager {
 			
 			String[] splits = otherString.split("/");
 			
-			Party party = new SimpleParty(leader.getName(), splits);
+			Party party = new IParty(leader.getName(), splits);
 			
 			addParty(party);
 			

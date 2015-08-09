@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 		Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
 		
 		if(party != null){
-			if(pl.equals(party.getLeader())){
+			if(party.isLeader(pl.getName())){
 				event.setCancelled(true);
 				party.connectParty(event.getServer());
 			}else{

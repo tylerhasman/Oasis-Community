@@ -3,10 +3,6 @@ package com.nirvana.oasis.community.party;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
-
-
-
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -20,13 +16,13 @@ import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.settings.Constants;
 import com.nirvana.oasis.mc.Chat;
 
-public class SimpleParty implements Party {
+public class IParty implements Party {
 	
 	private List<String> members;
 	private String leader;
 	private List<String> invites;
 	
-	public SimpleParty(String leader, String... others) {
+	public IParty(String leader, String... others) {
 		members = new ArrayList<String>(Constants.MAX_PARTY_SIZE);
 		invites = new ArrayList<String>();
 		
@@ -73,6 +69,13 @@ public class SimpleParty implements Party {
 	@Override
 	public void addPlayer(String name) {
 		members.add(name);
+		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
+			try {
+				OasisCore.getDatabaseManager().execute("UPDATE `Party` SET `Members`=? WHERE `Leader`=?", getMemberString(), getLeader());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@Override
@@ -143,6 +146,11 @@ public class SimpleParty implements Party {
 	@Override
 	public void removePlayer(String name) {
 		members.remove(name);
+	}
+
+	@Override
+	public boolean isLeader(String name) {
+		return leader.equals(name);
 	}
 
 }

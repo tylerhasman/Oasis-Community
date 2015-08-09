@@ -1,8 +1,6 @@
 package com.nirvana.oasis.community.party;
 
 import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.entity.Player;
 
 public interface PartyManager {

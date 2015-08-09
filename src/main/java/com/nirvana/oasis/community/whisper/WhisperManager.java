@@ -1,7 +1,5 @@
 package com.nirvana.oasis.community.whisper;
 
-import java.util.UUID;
-
 import org.bukkit.entity.Player;
 
 public interface WhisperManager {

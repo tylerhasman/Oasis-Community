@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.core.OasisCore;
-import com.nirvana.oasis.core.exception.OasisRuntimeException;
 import com.nirvana.oasis.core.ranks.Rank;
 import com.nirvana.oasis.mc.Chat;
 

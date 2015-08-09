@@ -79,4 +79,11 @@ public interface Party {
 	 */
 	public void removePlayer(String name);
 	
+	/**
+	 * 
+	 * @param name the players name
+	 * @return true if they are the party leader
+	 */
+	public boolean isLeader(String name);
+	
 }
