@@ -2,6 +2,8 @@ package com.nirvana.oasis.community.whisper;
 
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -55,7 +57,9 @@ public class IWhisperManager implements WhisperManager {
 		
 		Rank rank = OasisCore.getRankManager().getRank(from);
 		
-		String formattedMessage = String.format(format, rank.getPrefix(), fromName, message);
+		String prefix = ChatColor.translateAlternateColorCodes('&', rank.getPrefix());
+		
+		String formattedMessage = String.format(format, prefix, fromName, message);
 		
 		OasisCore.getNetworkUtilities().sendMessage(toName, formattedMessage);
 		OasisCore.getNetworkUtilities().sendMessage(fromName, formattedMessage);
