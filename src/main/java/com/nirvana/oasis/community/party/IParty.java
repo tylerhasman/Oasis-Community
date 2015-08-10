@@ -26,6 +26,8 @@ public class IParty implements Party {
 		members = new ArrayList<String>(Constants.MAX_PARTY_SIZE);
 		invites = new ArrayList<String>();
 		
+		this.leader = leader;
+		
 		addPlayer(leader);
 		
 		for(String other : others){
