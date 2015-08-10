@@ -109,6 +109,8 @@ public class IParty implements Party {
 			memberString += member + "/";
 		}
 		
+		memberString = memberString.substring(0, memberString.length()-1);//Remove the last /
+		
 		return memberString;
 	}
 
@@ -125,7 +127,6 @@ public class IParty implements Party {
 		OasisCommunity.getPartyManager().removeParty(this);
 		sendPartyMessage(Chat.RED+"The party has disbanded!");
 		members.clear();
-		leader = "";
 	}
 
 	@Override
