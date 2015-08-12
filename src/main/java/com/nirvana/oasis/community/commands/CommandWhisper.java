@@ -53,4 +53,9 @@ public class CommandWhisper implements OasisCommand {
 		return "/"+getName()+" [player] [message]";
 	}
 
+	@Override
+	public String[] getAliases() {
+		return new String[] { "whisper" };
+	}
+
 }

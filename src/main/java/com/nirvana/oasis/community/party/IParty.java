@@ -77,7 +77,7 @@ public class IParty implements Party {
 	public void updatePartyMembers(){
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
 			try {
-				OasisCore.getDatabaseManager().execute("UPDATE `Party` SET `Members`=? WHERE `Leader`=?", getMemberString(), getLeader());
+				OasisCore.getDatabaseManager().execute("UPDATE `Party` SET `Members`=?, `Leader`=? WHERE `Leader`=?", getMemberString(), getLeader(), getLeader());
 			} catch (Exception e) {
 				e.printStackTrace();
 				sendPartyMessage(Chat.RED+"Something went wrong when updating party members! Please tell a staff member!");
@@ -160,6 +160,12 @@ public class IParty implements Party {
 	@Override
 	public boolean isLeader(String name) {
 		return leader.equals(name);
+	}
+
+	@Override
+	public void setLeader(String newLeader) {
+		leader = newLeader;
+		updatePartyMembers();
 	}
 
 }

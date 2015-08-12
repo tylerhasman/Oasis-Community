@@ -46,4 +46,9 @@ public class CommandFriend implements OasisCommand {
 		return "/friends";
 	}
 
+	@Override
+	public String[] getAliases() {
+		return null;
+	}
+
 }

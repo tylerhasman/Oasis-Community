@@ -30,9 +30,21 @@ public class CommandParty implements OasisCommand {
 
 	@Override
 	public CommandResult execute(Player pl, String[] args) {
+		
+		String[] messages = new String[]{
+			"/party create - Create a new party",
+			"/party join [name] - Join someones party",
+			"/party invite [name] - Invite someone to your party",
+			"/party disband - Destroy the your party",
+			"/party leave - Leave your party, if your the leader this disbands it",
+			"/party list - List all members in your party",
+			"/party promote [name] - Promote a party member to the leader"
+		};
+		
 		if(args.length == 0)
 		{
-			return CommandResult.BAD_USAGE;
+			pl.sendMessage(messages);
+			return CommandResult.SUCCESS;
 		}
 		
 		String cmd = args[0];
@@ -53,7 +65,8 @@ public class CommandParty implements OasisCommand {
 		}else if(cmd.equalsIgnoreCase("join")){
 			
 			if(args.length < 2){
-				return CommandResult.BAD_USAGE;
+				pl.sendMessage(messages);
+				return CommandResult.SUCCESS;
 			}
 			
 			String target = args[1];
@@ -78,7 +91,8 @@ public class CommandParty implements OasisCommand {
 			
 		}else if(cmd.equalsIgnoreCase("invite")){
 			if(args.length < 2){
-				return CommandResult.BAD_USAGE;
+				pl.sendMessage(messages);
+				return CommandResult.SUCCESS;
 			}
 			
 			String target = args[1];
@@ -156,32 +170,33 @@ public class CommandParty implements OasisCommand {
 			}else{
 				pl.sendMessage(Chat.RED+"You're not in a party!");
 			}
-		}else if(cmd.equalsIgnoreCase("warp")){
+		}else if(cmd.equalsIgnoreCase("promote")){
 			Party party = OasisCommunity.getPartyManager().getParty(pl.getName());
+			
+			if(args.length == 1){
+				pl.sendMessage(messages);
+				return CommandResult.SUCCESS;
+			}
 			
 			if(party != null){
 				if(party.isLeader(pl.getName())){
 					
-					party.sendPartyMessage(Chat.GREEN+"The party has been warped to "+Chat.GOLD+OasisCore.getNetworkUtilities().getBungeeId());
-					party.connectParty(OasisCore.getNetworkUtilities().getBungeeId());
+					String newLeader = args[1];
+					
+					if(party.isPlayerInParty(newLeader)){
+						party.setLeader(newLeader);
+						party.sendPartyMessage(Chat.AQUA+newLeader+Chat.GREEN+" is now the party leader!");
+					}else{
+						pl.sendMessage(Chat.RED+"No player in the party named "+newLeader);
+					}
 					
 				}else{
-					pl.sendMessage(Chat.RED+"Only the party leader may warp!");
+					pl.sendMessage(Chat.RED+"Only the party leader may promote!");
 				}
 			}else{
 				pl.sendMessage(Chat.RED+"You're not in a party!");
 			}
 		}else{
-			
-			String[] messages = new String[]{
-				"/party create - Create a new party",
-				"/party join [name] - Join someones party",
-				"/party invite [name] - Invite someone to your party",
-				"/party disband - Destroy the your party",
-				"/party leave - Leave your party, if your the leader this disbands it",
-				"/party list - List all members in your party",
-				"/party warp - Warp all members of the party to your server"
-			};
 			
 			pl.sendMessage(messages);
 			
@@ -194,6 +209,11 @@ public class CommandParty implements OasisCommand {
 	@Override
 	public String getUsage() {
 		return "/"+getName()+" [ create | join | invite | disband | list | leave | warp ] <player name>";
+	}
+
+	@Override
+	public String[] getAliases() {
+		return null;
 	}
 
 }

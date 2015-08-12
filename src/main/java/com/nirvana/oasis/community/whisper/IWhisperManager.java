@@ -13,7 +13,7 @@ import com.nirvana.oasis.mc.Chat;
 
 public class IWhisperManager implements WhisperManager {
 
-	private static final String format = "%s %s "+Chat.GRAY+"says %s";
+	private static final String format = Chat.AQUA+"["+Chat.GREEN+"%s"+Chat.AQUA+"] "+Chat.GRAY+"%s "+Chat.GRAY+Chat.DOUBLE_ARROW+" %s";
 	
 	@Override
 	public boolean sendWhisper(Player from, String to, String message) {
@@ -55,11 +55,9 @@ public class IWhisperManager implements WhisperManager {
 			return false;
 		}
 		
-		Rank rank = OasisCore.getRankManager().getRank(from);
+		String server = OasisCore.getJedisManager().getCurrentServer(from);
 		
-		String prefix = ChatColor.translateAlternateColorCodes('&', rank.getPrefix());
-		
-		String formattedMessage = String.format(format, prefix, fromName, message);
+		String formattedMessage = String.format(format, server, fromName, message);
 		
 		OasisCore.getNetworkUtilities().sendMessage(toName, formattedMessage);
 		OasisCore.getNetworkUtilities().sendMessage(fromName, formattedMessage);

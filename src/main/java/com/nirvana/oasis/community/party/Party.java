@@ -85,5 +85,11 @@ public interface Party {
 	 * @return true if they are the party leader
 	 */
 	public boolean isLeader(String name);
+
+	/**
+	 * Set the parties leader
+	 * @param newLeader the new leader
+	 */
+	public void setLeader(String newLeader);
 	
 }

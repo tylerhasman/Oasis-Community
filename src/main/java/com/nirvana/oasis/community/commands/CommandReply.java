@@ -50,4 +50,9 @@ public class CommandReply implements OasisCommand {
 		return "/"+getName()+" [message]";
 	}
 
+	@Override
+	public String[] getAliases() {
+		return new String[] { "r" };
+	}
+
 }
