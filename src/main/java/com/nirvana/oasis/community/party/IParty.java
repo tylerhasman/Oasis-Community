@@ -148,7 +148,13 @@ public class IParty implements Party {
 
 	@Override
 	public boolean isInvited(String player) {
-		return invites.contains(player);
+		for(String str : invites){
+			if(str.equalsIgnoreCase(player)){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override

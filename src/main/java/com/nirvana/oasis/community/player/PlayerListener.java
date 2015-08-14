@@ -32,6 +32,7 @@ public class PlayerListener implements Listener {
 			if(party.isLeader(pl.getName())){
 				event.setCancelled(true);
 				party.connectParty(event.getServer());
+				System.out.println("Teleporting party");
 			}else{
 				pl.sendMessage(Chat.RED+"Only the party leader may switch servers!");
 			}
