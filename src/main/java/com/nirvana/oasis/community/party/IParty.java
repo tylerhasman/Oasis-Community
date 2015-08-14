@@ -116,6 +116,11 @@ public class IParty implements Party {
 
 	@Override
 	public void disband() {
+		
+		if(members.size() == 0){
+			return;
+		}
+		
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
 			try {
 				OasisCore.getDatabaseManager().execute("DELETE FROM `Party` WHERE `Leader`=?", leader);
@@ -127,6 +132,7 @@ public class IParty implements Party {
 		OasisCommunity.getPartyManager().removeParty(this);
 		sendPartyMessage(Chat.RED+"The party has disbanded!");
 		members.clear();
+		
 	}
 
 	@Override
