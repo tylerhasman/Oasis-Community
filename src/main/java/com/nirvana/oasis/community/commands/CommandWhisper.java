@@ -35,8 +35,8 @@ public class CommandWhisper implements OasisCommand {
 		
 		String message = "";
 		
-		for(String str : args){
-			message += str + " ";
+		for(int i = 1; i < args.length;i++){
+			message += args[i] + " ";
 		}
 		
 		boolean result = OasisCommunity.getWhisperManager().sendWhisper(pl, name, message);
@@ -55,7 +55,7 @@ public class CommandWhisper implements OasisCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "whisper" };
+		return new String[] { "whisper", "msg", "w" };
 	}
 
 }
