@@ -70,6 +70,9 @@ public class IParty implements Party {
 	
 	@Override
 	public void addPlayer(String name) {
+		if(members.contains(name)){
+			return;
+		}
 		members.add(name);
 		updatePartyMembers();
 	}

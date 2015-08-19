@@ -2,13 +2,10 @@ package com.nirvana.oasis.community.whisper;
 
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.nirvana.oasis.core.OasisCore;
-import com.nirvana.oasis.core.ranks.Rank;
 import com.nirvana.oasis.mc.Chat;
 
 public class IWhisperManager implements WhisperManager {
