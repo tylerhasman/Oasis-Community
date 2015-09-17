@@ -27,8 +27,7 @@ public class Friend {
 			name = OasisCore.getDatabaseManager().getName(id);
 		}
 		
-		server = OasisCore.getJedisManager().getCurrentServer(id);
-		lastSeen = OasisCore.getJedisManager().getLastOnline(id);
+		server = OasisCore.getNetworkUtilities().getServer(name);
 		
 		isOnline = server != null;
 	}

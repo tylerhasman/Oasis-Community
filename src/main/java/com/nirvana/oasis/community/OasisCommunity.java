@@ -5,35 +5,27 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nirvana.oasis.community.commands.CommandFriend;
 import com.nirvana.oasis.community.commands.CommandParty;
-import com.nirvana.oasis.community.commands.CommandReply;
-import com.nirvana.oasis.community.commands.CommandWhisper;
 import com.nirvana.oasis.community.friends.IFriendManager;
 import com.nirvana.oasis.community.friends.FriendManager;
 import com.nirvana.oasis.community.ignore.IgnoreManager;
 import com.nirvana.oasis.community.party.IPartyManager;
 import com.nirvana.oasis.community.party.PartyManager;
 import com.nirvana.oasis.community.player.PlayerListener;
-import com.nirvana.oasis.community.whisper.IWhisperManager;
-import com.nirvana.oasis.community.whisper.WhisperManager;
 import com.nirvana.oasis.core.OasisCore;
 
 public class OasisCommunity extends JavaPlugin {
 
 	private FriendManager friendManager;
 	private PartyManager partyManager;
-	private WhisperManager whisperManager;
 	private IgnoreManager ignoreManager;
 	
 	@Override
 	public void onEnable() {
 		friendManager = new IFriendManager();
 		partyManager = new IPartyManager();
-		whisperManager = new IWhisperManager();
 		
 		OasisCore.getCommandManager().registerCommand(new CommandFriend());
 		OasisCore.getCommandManager().registerCommand(new CommandParty());
-		OasisCore.getCommandManager().registerCommand(new CommandWhisper());
-		OasisCore.getCommandManager().registerCommand(new CommandReply());
 		
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 	}
@@ -50,10 +42,6 @@ public class OasisCommunity extends JavaPlugin {
 		return getInstance().partyManager;
 	}
 
-	public static WhisperManager getWhisperManager() {
-		return getInstance().whisperManager;
-	}
-	
 	public static IgnoreManager getIgnoreManager(){
 		return getInstance().ignoreManager;
 	}

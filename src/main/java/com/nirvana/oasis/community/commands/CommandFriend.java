@@ -48,7 +48,7 @@ public class CommandFriend implements OasisCommand {
 
 	@Override
 	public String[] getAliases() {
-		return null;
+		return new String[] {"friend"};
 	}
 
 }

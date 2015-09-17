@@ -51,7 +51,7 @@ public class IFriendManager implements FriendManager {
 		
 		try {
 			int result = OasisCore.getDatabaseManager().execute("INSERT INTO `Friends` (`Player 1`, `Player 2`) VALUES (?, ?)", reciever.toString(), sender.toString());
-
+			
 			return result > 0;//If we didnt change a line that must mean something happened incorrectly!
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,6 +64,7 @@ public class IFriendManager implements FriendManager {
 	public boolean acceptRequest(UUID sender, UUID receiver) {
 		try {
 			OasisCore.getDatabaseManager().execute("UPDATE `Friends` SET `Valid`='1' WHERE `Player 1`=? AND `Player 2`=?", receiver.toString(), sender.toString());
+			OasisCore.getDatabaseManager().execute("INSERT INTO `Friends` (`Player 2`, `Player 1`, `Valid`) VALUES (?, ?, ?)", receiver.toString(), sender.toString(), 1);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -22,7 +22,8 @@ public class Request {
 	
 	public void load(){
 		name = OasisCore.getDatabaseManager().getName(sender);
-		server = OasisCore.getJedisManager().getCurrentServer(sender);
+		//server = OasisCore.getJedisManager().getCurrentServer(sender);
+		server = "Not Implemented";
 		isOnline = server != null;
 	}
 	

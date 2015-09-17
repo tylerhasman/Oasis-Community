@@ -318,9 +318,8 @@ public class FriendListMenuBuilder {
 			stack.setTitle(Chat.GREEN+friend.getName());
 			stack.setLore(
 					Chat.GRAY+Chat.BOLD+"Status: "+Chat.GREEN+Chat.BOLD+"Online",
-					Chat.GRAY+"Currently on "+Chat.RESET+Chat.GOLD+friend.getServer(), 
-					"",
-					Chat.WHITE+Chat.UNDERLINE+"Click to join");
+					""
+					/*Chat.WHITE+Chat.UNDERLINE+"Click to join"*/);
 		}else{
 			
 			long time = System.currentTimeMillis() - friend.getLastSeen();
