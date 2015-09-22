@@ -32,6 +32,7 @@ public class PlayerListener implements Listener {
 			if(party.isLeader(pl.getName())){
 				party.connectParty(event.getServer());
 				party.sendPartyMessage(Chat.YELLOW+"The party warps to "+Chat.AQUA+event.getServer());
+				OasisCommunity.getPartyManager().removeParty(party);
 			}else{
 				pl.sendMessage(Chat.RED+"Only the party leader may switch servers!");
 			}

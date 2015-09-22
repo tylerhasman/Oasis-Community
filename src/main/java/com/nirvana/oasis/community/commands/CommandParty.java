@@ -32,13 +32,13 @@ public class CommandParty implements OasisCommand {
 	public CommandResult execute(Player pl, String[] args) {
 		
 		String[] messages = new String[]{
-			"/party create - Create a new party",
-			"/party join [name] - Join someones party",
-			"/party invite [name] - Invite someone to your party",
-			"/party disband - Destroy the your party",
-			"/party leave - Leave your party, if your the leader this disbands it",
-			"/party list - List all members in your party",
-			"/party promote [name] - Promote a party member to the leader"
+			Chat.AQUA+"/party create - Create a new party",
+			Chat.AQUA+"/party join [name] - Join someones party",
+			Chat.AQUA+"/party invite [name] - Invite someone to your party",
+			Chat.AQUA+"/party disband - Destroy the your party",
+			Chat.AQUA+"/party leave - Leave your party, if your the leader this disbands it",
+			Chat.AQUA+"/party list - List all members in your party",
+			Chat.AQUA+"/party promote [name] - Promote a party member to the leader"
 		};
 		
 		if(args.length == 0)
