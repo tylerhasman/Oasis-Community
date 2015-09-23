@@ -32,6 +32,7 @@ public class CommandParty implements OasisCommand {
 	public CommandResult execute(Player pl, String[] args) {
 		
 		String[] messages = new String[]{
+			Chat.centerText(Chat.GREEN+"~~~ "+Chat.AQUA+Chat.BOLD+"Party Commands"+Chat.RESET+Chat.GREEN+" ~~~"),
 			Chat.AQUA+"/party create - Create a new party",
 			Chat.AQUA+"/party join [name] - Join someones party",
 			Chat.AQUA+"/party invite [name] - Invite someone to your party",
@@ -71,23 +72,36 @@ public class CommandParty implements OasisCommand {
 			
 			String target = args[1];
 			
+			if(Bukkit.getPlayer(target) == null){
+				
+				return CommandResult.SUCCESS;
+			}
+			
 			Party party = OasisCommunity.getPartyManager().getParty(target);
 			
 			if(party == null){
 				pl.sendMessage(Chat.RED+target+" is not in a party!");
+			}else{
+				if(OasisCommunity.getPartyManager().isInParty(pl.getName())){
+					pl.sendMessage(Chat.RED+"You are already in a party!");
+				}else{
+					
+					if(party.isInvited(pl.getName()))
+					{
+						if(party.getMembers().size() >= party.getCapacity()){
+							pl.sendMessage(Chat.RED+"That party is full!");
+						}else{
+							party.addPlayer(pl.getName());
+							party.sendPartyMessage(Chat.GREEN+pl.getName()+" has joined the party!");
+						}
+					}else{
+						pl.sendMessage(Chat.RED+"You are not invited to "+target+"'s party!");
+					}
+				}
+
 			}
 			
-			if(party.isInvited(pl.getName()))
-			{
-				if(party.getMembers().size() >= party.getCapacity()){
-					pl.sendMessage(Chat.RED+"That party is full!");
-				}else{
-					party.addPlayer(pl.getName());
-					party.sendPartyMessage(Chat.GREEN+pl.getName()+" has joined the party!");
-				}
-			}else{
-				pl.sendMessage(Chat.RED+"You are not invited to "+target+"'s party!");
-			}
+			
 			
 		}else if(cmd.equalsIgnoreCase("invite")){
 			if(args.length < 2){
@@ -110,6 +124,8 @@ public class CommandParty implements OasisCommand {
 				pl.sendMessage(Chat.RED+"You're not in a party!");
 			}else if(!party.isLeader(pl.getName())){
 				pl.sendMessage(Chat.RED+"You're not the leader of your party!");
+			}else if(pl.getName().equals(target)){
+				pl.sendMessage(Chat.RED+"You can't invite yourself!");
 			}else if(party.isInvited(target)){
 				pl.sendMessage(Chat.RED+target+" is already invited to your party!");
 			}else{
