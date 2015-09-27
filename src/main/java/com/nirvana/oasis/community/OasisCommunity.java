@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nirvana.oasis.community.commands.CommandFriend;
 import com.nirvana.oasis.community.commands.CommandParty;
+import com.nirvana.oasis.community.craftbook.CraftBook;
+import com.nirvana.oasis.community.craftbook.ICraftBook;
 import com.nirvana.oasis.community.friends.IFriendManager;
 import com.nirvana.oasis.community.friends.FriendManager;
 import com.nirvana.oasis.community.ignore.IgnoreManager;
@@ -17,12 +19,14 @@ public class OasisCommunity extends JavaPlugin {
 
 	private FriendManager friendManager;
 	private PartyManager partyManager;
+	private CraftBook craftBook;
 	private IgnoreManager ignoreManager;
 	
 	@Override
 	public void onEnable() {
 		friendManager = new IFriendManager();
 		partyManager = new IPartyManager();
+		craftBook = new ICraftBook();
 		
 		OasisCore.getCommandManager().registerCommand(new CommandFriend());
 		OasisCore.getCommandManager().registerCommand(new CommandParty());
@@ -44,6 +48,10 @@ public class OasisCommunity extends JavaPlugin {
 
 	public static IgnoreManager getIgnoreManager(){
 		return getInstance().ignoreManager;
+	}
+	
+	public static CraftBook getSocialMedia(){
+		return getInstance().craftBook;
 	}
 	
 }

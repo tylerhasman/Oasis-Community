@@ -1,14 +1,10 @@
 package com.nirvana.oasis.community.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.nirvana.oasis.community.OasisCommunity;
-import com.nirvana.oasis.community.ui.FriendListMenuBuilder;
+import com.nirvana.oasis.community.craftbook.CraftBookMenu;
 import com.nirvana.oasis.core.commands.CommandResult;
 import com.nirvana.oasis.core.commands.OasisCommand;
-import com.nirvana.oasis.core.menu.PacketMenu;
-import com.nirvana.oasis.mc.Chat;
 
 public class CommandFriend implements OasisCommand {
 
@@ -30,13 +26,17 @@ public class CommandFriend implements OasisCommand {
 	@Override
 	public CommandResult execute(Player pl, String[] args) {		
 		
-		pl.sendMessage(Chat.YELLOW+Chat.BOLD+"LOADING FRIENDS LIST...");
+		/*pl.sendMessage(Chat.YELLOW+Chat.BOLD+"LOADING FRIENDS LIST...");
 		
 		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
 			PacketMenu menu = FriendListMenuBuilder.getFriendMenu(pl, null, null);
 			
 			menu.open(pl);
-		});
+		});*/
+		
+		CraftBookMenu menu = new CraftBookMenu(pl);
+		
+		menu.open(pl);
 		
 		return CommandResult.SUCCESS;
 	}
@@ -48,7 +48,7 @@ public class CommandFriend implements OasisCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"friend"};
+		return new String[] {"friend", "craftbook"};
 	}
 
 }
