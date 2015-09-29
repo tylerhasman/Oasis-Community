@@ -1,19 +1,16 @@
 package com.nirvana.oasis.community.craftbook;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.core.OasisCore;
@@ -39,6 +36,9 @@ public class CraftBookMenu extends ChestPacketMenu {
 		int j = 2;
 		
 		addItem(0, new Item(Material.BOOK_AND_QUILL).setTitle(Chat.YELLOW+"Follow").setLore(Chat.GRAY+"Click to add a new follow").build());
+		addItem(1, new Item(Material.SKULL_ITEM, 1, 3).setTitle(Chat.YELLOW+Chat.BOLD+"My Profile").setOwner(player.getName()).setLore(Chat.GRAY+"Click to view your profile").build());
+		
+		followerMappings.put(1, new IFollow(player.getUniqueId(), true, player.getUniqueId()));
 		
 		for(Follow follow : follows){
 			
@@ -61,7 +61,7 @@ public class CraftBookMenu extends ChestPacketMenu {
 			
 			addItem(i + 1, j + 1, new Item(Material.SKULL_ITEM, 1, 3).setTitle(Chat.BLUE+follow.getPlayerName()).setLore(lore).setOwner(follow.getPlayerName()).build());
 			
-			followerMappings.put(translateCoord(i, j), follow);
+			followerMappings.put(translateCoord(i, j) + 10, follow);
 			
 			i++;
 			
@@ -111,7 +111,7 @@ public class CraftBookMenu extends ChestPacketMenu {
 						
 						ChestPacketMenu profilemenu = new ChestPacketMenu(9 * 4, profile.getOwnerName()+"'s Profile", player);
 						
-						String[] statusChoppedUp = WordUtils.wrap(status, 10, "\r\n", true).split("\r\n");
+						String[] statusChoppedUp = WordUtils.wrap(status, 35, "\r\n", true).split("\r\n");
 						String[] lore = new String[statusChoppedUp.length + 1];
 						
 						lore[0] = Chat.YELLOW+"Status: ";
@@ -121,6 +121,12 @@ public class CraftBookMenu extends ChestPacketMenu {
 						}
 						
 						profilemenu.addItem(1, 1, new Item(Material.SKULL_ITEM, 1, 3).setTitle(Chat.YELLOW+profile.getOwnerName()).setOwner(profile.getOwnerName()).setLore(lore).build());
+						
+						if(!follow.getPlayer().equals(follow.getOwner().getUniqueId())){
+							profilemenu.addItem(2, 1, new Item(Material.INK_SACK, 1, follow.isFollowingBack() ? 10 : 1).setTitle(Chat.GREEN+"Relationship Status").setLore(Chat.GRAY+"This player is "+(follow.isFollowingBack() ? "following you back" : "not following you back")).build());	
+						}else{
+							profilemenu.addItem(2, 1, new Item(Material.SIGN).setTitle(Chat.YELLOW+"How-To").setLore(Chat.GRAY+"Set your status by using:", Chat.GRAY+Chat.ITALIC+"/craftbook status [new status]").build());
+						}
 						
 						int i = 0;
 						
@@ -145,7 +151,7 @@ public class CraftBookMenu extends ChestPacketMenu {
 					AnvilPacketMenu anvil = new AnvilPacketMenu(player);
 					
 					anvil.setDefaultText("Enter player name");
-					anvil.setResult(new ItemStack(Material.SKULL_ITEM, 0, (short) 3));
+					anvil.setResult(new ItemStack(Material.SKULL_ITEM, 1, (short) 3));
 					anvil.setHandler((str, pl) -> {
 						
 						UUID uuid = OasisCore.getDatabaseManager().getUUID(str);

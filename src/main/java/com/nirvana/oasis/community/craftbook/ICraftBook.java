@@ -99,7 +99,11 @@ public class ICraftBook implements CraftBook {
 		try {
 			ResultSetList data = OasisCore.getDatabaseManager().query("SELECT COUNT(*) FROM `socialmedia` WHERE `player`=? AND `targetuuid`=?", player.toString(), target.toString());
 			
-			int count = data.getValue("COUNT(*)");
+			long count = 0;
+			
+			if(data.next()){
+				count = data.getValue("COUNT(*)");
+			}
 			
 			return count > 0;
 		} catch (Exception e) {

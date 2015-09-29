@@ -44,7 +44,7 @@ public class IPlayerProfile implements PlayerProfile {
 		String serializedInfo = "";
 		
 		for(String str : info){
-			serializedInfo += str+"|||||";
+			serializedInfo += str+"\r\n";
 		}
 		
 		try {
@@ -54,10 +54,7 @@ public class IPlayerProfile implements PlayerProfile {
 			
 			oos.writeObject(displayItem.serialize());
 			
-			ByteArrayInputStream inputBytes = new ByteArrayInputStream(bytes.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(inputBytes);
-			
-			OasisCore.getDatabaseManager().execute("INSERT INTO `playerfeeds` (`playeruuid`, 'title`, `item`, `info`, `timestamp`) VALUES (?, ?, ?, ?, ?)", owner.toString(), title, ois, serializedInfo, System.currentTimeMillis());
+			OasisCore.getDatabaseManager().execute("INSERT INTO `playerfeeds` (`playeruuid`, `title`, `item`, `info`, `timestamp`) VALUES (?, ?, ?, ?, ?)", owner.toString(), title, bytes.toByteArray(), serializedInfo, System.currentTimeMillis());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,13 +80,15 @@ public class IPlayerProfile implements PlayerProfile {
 			while(result.next()){
 				String title = result.getValue("title");
 				String infoSerialized = result.getValue("info");
-				String[] info = infoSerialized.split("|||||");
+				
+				String[] info = infoSerialized.split("\r\n");
+				
 				long timestamp = result.getValue("timestamp");
-				Blob blob = result.getValue("item");
+				byte[] blob = result.getValue("item");
 				Map<String, Object> serializedItem = new HashMap<>();
 				ItemStack item = null;
 				try {
-					ObjectInputStream ois = new ObjectInputStream(blob.getBinaryStream());
+					ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(blob));
 					
 					serializedItem = (Map<String, Object>) ois.readObject();
 					

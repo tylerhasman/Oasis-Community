@@ -2,9 +2,11 @@ package com.nirvana.oasis.community.commands;
 
 import org.bukkit.entity.Player;
 
+import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.craftbook.CraftBookMenu;
 import com.nirvana.oasis.core.commands.CommandResult;
 import com.nirvana.oasis.core.commands.OasisCommand;
+import com.nirvana.oasis.mc.Chat;
 
 public class CommandFriend implements OasisCommand {
 
@@ -26,29 +28,41 @@ public class CommandFriend implements OasisCommand {
 	@Override
 	public CommandResult execute(Player pl, String[] args) {		
 		
-		/*pl.sendMessage(Chat.YELLOW+Chat.BOLD+"LOADING FRIENDS LIST...");
-		
-		Bukkit.getScheduler().runTaskAsynchronously(OasisCommunity.getInstance(), () -> {
-			PacketMenu menu = FriendListMenuBuilder.getFriendMenu(pl, null, null);
+		if(args.length == 0){
+			CraftBookMenu menu = new CraftBookMenu(pl);
 			
 			menu.open(pl);
-		});*/
-		
-		CraftBookMenu menu = new CraftBookMenu(pl);
-		
-		menu.open(pl);
+		}else{
+			if(args[0].equalsIgnoreCase("status")){
+				String newStatus = "";
+				for(int i = 1; i < args.length;i++){
+					newStatus += args[i] + " ";
+				}
+				
+				OasisCommunity.getSocialMedia().getProfile(pl.getUniqueId()).updateStatus(newStatus);
+				
+				pl.sendMessage(Chat.GREEN+"Your status has been set!");
+			}else if(args[0].equalsIgnoreCase("open")){
+				CraftBookMenu menu = new CraftBookMenu(pl);
+				
+				menu.open(pl);
+			}else{
+				return CommandResult.BAD_USAGE;
+			}
+		}
+
 		
 		return CommandResult.SUCCESS;
 	}
 
 	@Override
 	public String getUsage() {
-		return "/friends";
+		return "/craftbook [help / open]";
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[] {"friend", "craftbook"};
+		return new String[] {"friend", "craftbook", "cb"};
 	}
 
 }
