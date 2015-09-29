@@ -1,17 +1,14 @@
 package com.nirvana.oasis.community.player;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.nirvana.oasis.community.OasisCommunity;
 import com.nirvana.oasis.community.craftbook.PlayerProfile;
 import com.nirvana.oasis.community.party.Party;
-import com.nirvana.oasis.core.OasisCore;
 import com.nirvana.oasis.core.event.PlayerServerConnectEvent;
 import com.nirvana.oasis.mc.Chat;
 
@@ -24,9 +21,8 @@ public class PlayerListener implements Listener {
 			OasisCommunity.getPartyManager().loadPartyWithLeader(event.getPlayer());
 			PlayerProfile profile = OasisCommunity.getSocialMedia().getProfile(event.getPlayer().getUniqueId());
 			if(profile.createIfNotExists()){
-				OasisCore.getInstance().getLogger().info("Created player profile for "+event.getPlayer().getName());
+				
 			}
-			profile.addToFeed(Chat.YELLOW+"Joined "+OasisCore.getNetworkUtilities().getBungeeId(), new ItemStack(Material.REDSTONE, 1), event.getPlayer().getName() + " joined "+OasisCore.getNetworkUtilities().getBungeeId());
 		});
 		
 	}

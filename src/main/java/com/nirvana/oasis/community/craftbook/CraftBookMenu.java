@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -30,12 +29,19 @@ public class CraftBookMenu extends ChestPacketMenu {
 	
 		followerMappings = new HashMap<>();
 		
-		List<Follow> follows = OasisCommunity.getSocialMedia().getFollows(player.getUniqueId());
+		PlayerProfile profile = OasisCommunity.getSocialMedia().getProfile(player.getUniqueId());
+		
+		List<Follow> follows = profile.getFollows();
 		
 		int i = 1;
 		int j = 2;
 		
-		addItem(0, new Item(Material.BOOK_AND_QUILL).setTitle(Chat.YELLOW+"Follow").setLore(Chat.GRAY+"Click to add a new follow").build());
+		if(follows.size() < CraftBook.Settings.MAX_FOLLOWS){
+			addItem(0, new Item(Material.BOOK_AND_QUILL).setTitle(Chat.YELLOW+"Follow").setLore(Chat.GRAY+"Click to add a new follow").build());
+		}else{
+			addItem(0, new Item(Material.BOOK).setTitle(Chat.RED+Chat.STRIKETHROUGH+"Follow").setLore(Chat.RED+"You can not follow any more players!", Chat.RED+"Delete some follows to make room.").build());
+		}
+		
 		addItem(1, new Item(Material.SKULL_ITEM, 1, 3).setTitle(Chat.YELLOW+Chat.BOLD+"My Profile").setOwner(player.getName()).setLore(Chat.GRAY+"Click to view your profile").build());
 		
 		followerMappings.put(1, new IFollow(player.getUniqueId(), true, player.getUniqueId()));
@@ -104,45 +110,10 @@ public class CraftBookMenu extends ChestPacketMenu {
 						
 						PlayerProfile profile = OasisCommunity.getSocialMedia().getProfile(follow.getPlayer());
 						
-						profile.createIfNotExists();
-						
-						List<FeedEntry> feed = profile.getFeed();
-						String status = profile.getStatus();
-						
-						ChestPacketMenu profilemenu = new ChestPacketMenu(9 * 4, profile.getOwnerName()+"'s Profile", player);
-						
-						String[] statusChoppedUp = WordUtils.wrap(status, 35, "\r\n", true).split("\r\n");
-						String[] lore = new String[statusChoppedUp.length + 1];
-						
-						lore[0] = Chat.YELLOW+"Status: ";
-						
-						for(int i = 0; i < statusChoppedUp.length;i++){
-							lore[i + 1] = Chat.GRAY+statusChoppedUp[i];
-						}
-						
-						profilemenu.addItem(1, 1, new Item(Material.SKULL_ITEM, 1, 3).setTitle(Chat.YELLOW+profile.getOwnerName()).setOwner(profile.getOwnerName()).setLore(lore).build());
-						
-						if(!follow.getPlayer().equals(follow.getOwner().getUniqueId())){
-							profilemenu.addItem(2, 1, new Item(Material.INK_SACK, 1, follow.isFollowingBack() ? 10 : 1).setTitle(Chat.GREEN+"Relationship Status").setLore(Chat.GRAY+"This player is "+(follow.isFollowingBack() ? "following you back" : "not following you back")).build());	
-						}else{
-							profilemenu.addItem(2, 1, new Item(Material.SIGN).setTitle(Chat.YELLOW+"How-To").setLore(Chat.GRAY+"Set your status by using:", Chat.GRAY+Chat.ITALIC+"/craftbook status [new status]").build());
-						}
-						
-						int i = 0;
-						
-						for(FeedEntry entry : feed){
-							
-							profilemenu.addItem(i+1, 4, entry.buildItem());
-							
-							i++;
-							
-							if(i > 8){
-								break;
-							}
-						}
+						PacketMenu newMenu = profile.getMenu(player);
 						
 						menu.close(player);
-						profilemenu.open(player);
+						newMenu.open(player);
 						
 					}
 					
@@ -156,11 +127,17 @@ public class CraftBookMenu extends ChestPacketMenu {
 						
 						UUID uuid = OasisCore.getDatabaseManager().getUUID(str);
 						
+						PlayerProfile profile = OasisCommunity.getSocialMedia().getProfile(pl.getUniqueId());
+						
 						if(uuid == null){
 							pl.sendMessage(Chat.RED+"No player named "+str+" has ever logged into NirvanaMC");
 						}else{
-							OasisCommunity.getSocialMedia().follow(pl, str, uuid);
-							pl.sendMessage(Chat.GREEN+"You have successfully followed "+str);
+							if(uuid.equals(pl.getUniqueId())){
+								pl.sendMessage(Chat.RED+"You can't add yourself!");
+							}else{
+								profile.follow(uuid);
+								pl.sendMessage(Chat.GREEN+"You have successfully followed "+str);
+							}
 						}
 						
 					});

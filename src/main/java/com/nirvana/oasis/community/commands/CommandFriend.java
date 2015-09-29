@@ -39,7 +39,7 @@ public class CommandFriend implements OasisCommand {
 					newStatus += args[i] + " ";
 				}
 				
-				OasisCommunity.getSocialMedia().getProfile(pl.getUniqueId()).updateStatus(newStatus);
+				OasisCommunity.getSocialMedia().getProfile(pl.getUniqueId()).setStatus(newStatus);
 				
 				pl.sendMessage(Chat.GREEN+"Your status has been set!");
 			}else if(args[0].equalsIgnoreCase("open")){

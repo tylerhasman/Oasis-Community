@@ -73,7 +73,7 @@ public class CommandParty implements OasisCommand {
 			String target = args[1];
 			
 			if(Bukkit.getPlayer(target) == null){
-				
+				OasisCore.getLocaleManager().sendPlayerNotFound(pl, target);
 				return CommandResult.SUCCESS;
 			}
 			

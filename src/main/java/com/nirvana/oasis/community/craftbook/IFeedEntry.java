@@ -35,11 +35,6 @@ public class IFeedEntry implements FeedEntry {
 
 	@Override
 	public ItemStack buildItem() {
-		
-		for(String s : info){
-			System.out.println(s);
-		}
-		
 		return new Item(item).setTitle(title).setLore(info).build();
 	}
 
